@@ -2,9 +2,8 @@
 
 # Algorithms.py
 Implements: 
-- check_availability(tracks)
-- run_selected_list(selected_list)
-with 4 easy variables
+- check_availability(tracks)        #with 4 easy variables
+- run_selected_list(selected_list)  #with 4 easy variables
 
 Still missing: 
 - Front-back comms
