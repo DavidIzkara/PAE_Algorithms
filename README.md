@@ -7,6 +7,6 @@ Implements:
 with 4 easy variables
 
 Still missing: 
--Front-back comms
--Check of complex algorithm needs
--actual calculation of the complex algorithms
+- Front-back comms
+- Check of complex algorithm needs
+- actual calculation of the complex algorithms
