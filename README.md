@@ -13,3 +13,7 @@ Still missing:
 # shock_index.py
 Computes the Shock Index
 - The tracks are selected based on our equipment, for other implementation please do check your tracks so you can correctly select the desired parameter.
+
+# driving_pressure.py
+Computes the Driving Pressure
+- The tracks are selected based on our equipment, for other implementation please do check your tracks so you can correctly select the desired parameter.
