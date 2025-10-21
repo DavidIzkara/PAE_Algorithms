@@ -12,3 +12,4 @@ Still missing:
 
 # ShockIndex.py
 Computes the Shock Index
+- The tracks are selected based on our equipment, for other implementation please do check your tracks so you can correctly select the desired parameter.
