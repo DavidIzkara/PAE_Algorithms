@@ -1,4 +1,7 @@
 import vitaldb
+from shock_index import ShockIndex
+from driving_pressure import DrivingPressure
+from compliance import Compliance
 #Este código va en back-end, las definiciones de las variables ya están hechas, es solo para ver cómo se usa la clase.:
 
 vital_path = find_latest_vital(recordings_dir) #Función que encuentra el último fichero de vital.
@@ -20,7 +23,11 @@ def check_availability(tracks): #Función que comprueba qué algoritmos se puede
     if 'Intellivue/PLETH_SAT_O2' and 'Intellivue/FiO2' in tracks:
         possible_list.append('ROX Index')
     if 'Intellivue/TEMP' and 'Intellivue/BT_CORE' and 'Intellivue/BT_SKIN' in tracks:
-        possible_list.append('Temp Comparison')
+        possible_list.append('Temp Comparison') #Pendiente actualizar esta función.
+
+    #Pendiente Comprobar lo necesario para el modelo de ICP
+    #Pendiente Comprobar Variables autonomicas
+    #Pendiente Comprobar MustCare
 
     return possible_list #Esta lista se envía al front para que el usuario seleccione.
 
@@ -30,32 +37,17 @@ def run_selected(selected_list): #Función que ejecuta los algoritmos selecciona
     results = {}
     for algorithm in selected_list:
         if algorithm == 'Shock Index':
-            results['Shock Index'] = shock_index()
+            results['Shock Index'] = ShockIndex(vf).values
         elif algorithm == 'Driving Pressure':
-            results['Driving Pressure'] = driving_pressure()
+            results['Driving Pressure'] = DrivingPressure(vf).values
         elif algorithm == 'Compliance':
-            results['Compliance'] = compliance()
+            results['Compliance'] = Compliance(vf).values
         elif algorithm == 'ROX Index':
             results['ROX Index'] = rox_index()
         #elif algorithm == 'Temp Comparison':
         #    results['Temp Comparison'] = temp_comparison()
+        #Pendiente añadir los algoritmos que hayan sido previamente comprobados.
     return results
-
-#SHOCK INDEX (if there is invasive blood pressure, use it; if not, use non-invasive blood pressure)
-def shock_index():
-    try:
-        SI = vf.to_numpy(track_names = 'Intellivue/ECG_HR') / vf.to_numpy(track_names = 'Intellivue/ABP_SYS')  # Invasive blood pressure
-    except Exception:
-        SI = vf.to_numpy(track_names = 'Intellivue/ECG_HR') / vf.to_numpy(track_names = 'Intellivue/NIBP_SYS')  # Non-invasive blood pressure
-    return SI
-
-#DRIVING PRESSURE
-def driving_pressure():
-    return vf.to_numpy(track_names = 'Intellivue/PPLAT_CMH2O') - vf.to_numpy(track_names = 'Intellivue/PEEP_CMH2O')
-
-#COMPLIANCE
-def compliance():
-    return vf.to_numpy(track_names = 'Intellivue/Tidal_Volume') / driving_pressure() 
 
 #ROX INDEX
 def rox_index():
