@@ -10,6 +10,6 @@ Still missing:
 - Check of complex algorithm needs
 - actual calculation of the complex algorithms
 
-# ShockIndex.py
+# shock_index.py
 Computes the Shock Index
 - The tracks are selected based on our equipment, for other implementation please do check your tracks so you can correctly select the desired parameter.
