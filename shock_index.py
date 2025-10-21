@@ -20,3 +20,6 @@ class ShockIndex:
 
         # Computes the Shock Index (heart rate divided by systolic BP)
         self.values = hr / sys
+#Handles both invasive and non-invasive blood pressure by checking available tracks.
+#Requires heart rate track, tries multiple possible names for robustness.
+#Does not require any special handling of missing data as this class is only used when we have the data.
