@@ -17,3 +17,7 @@ Computes the Shock Index
 # driving_pressure.py
 Computes the Driving Pressure
 - The tracks are selected based on our equipment, for other implementation please do check your tracks so you can correctly select the desired parameter.
+
+# compliance.py
+Computes the Compliance
+- The tracks are selected based on our equipment, for other implementation please do check your tracks so you can correctly select the desired parameter.
