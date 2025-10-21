@@ -9,3 +9,6 @@ Still missing:
 - Front-back comms
 - Check of complex algorithm needs
 - actual calculation of the complex algorithms
+
+# ShockIndex.py
+Computes the Shock Index
