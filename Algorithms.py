@@ -1,7 +1,14 @@
-import vitaldb
+import vitaldb 
+from vitaldb import VitalFile
+
 from shock_index import ShockIndex
 from driving_pressure import DrivingPressure
 from compliance import Compliance
+from rox_index import RoxIndex
+from temp_comparison import TempComparison
+#Pendiente importar ICP Model
+
+
 #Este código va en back-end, las definiciones de las variables ya están hechas, es solo para ver cómo se usa la clase.:
 
 vital_path = find_latest_vital(recordings_dir) #Función que encuentra el último fichero de vital.
@@ -22,12 +29,15 @@ def check_availability(tracks): #Función que comprueba qué algoritmos se puede
         possible_list.append('Compliance')
     if 'Intellivue/PLETH_SAT_O2' and 'Intellivue/FiO2' in tracks:
         possible_list.append('ROX Index')
-    if 'Intellivue/TEMP' and 'Intellivue/BT_CORE' and 'Intellivue/BT_SKIN' in tracks:
-        possible_list.append('Temp Comparison') #Pendiente actualizar esta función.
-
-    #Pendiente Comprobar lo necesario para el modelo de ICP
+    if ('Intellivue/BT_CORE' or 'Intellivue/BT_BLD') and ('Intellivue/BT_SKIN' or 'Intellivue/TEMP') in tracks:
+        possible_list.append('Temp Comparison')
+    #Pendiente Comprobar Variables MostCare
     #Pendiente Comprobar Variables autonomicas
-    #Pendiente Comprobar MustCare
+
+    if 'Intellivue/ICP' in tracks: #Might need more variables
+        possible_list.append('ICP Model')
+    #Pendiente comprobar ABP model
+    #Pendiente Comprobar otros algoritmos
 
     return possible_list #Esta lista se envía al front para que el usuario seleccione.
 
@@ -43,10 +53,18 @@ def run_selected(selected_list): #Función que ejecuta los algoritmos selecciona
         elif algorithm == 'Compliance':
             results['Compliance'] = Compliance(vf).values
         elif algorithm == 'ROX Index':
-            results['ROX Index'] = rox_index()
-        #elif algorithm == 'Temp Comparison':
-        #    results['Temp Comparison'] = temp_comparison()
-        #Pendiente añadir los algoritmos que hayan sido previamente comprobados.
+            results['ROX Index'] = RoxIndex(vf).values
+        elif algorithm == 'Temp Comparison':
+            results['Temp Comparison'] = TempComparison(vf).values 
+            #Gestionar distinto, devuelve un array con dos señales.
+        
+        #Pendiente añadir variables MostCare
+        #Pendiente añadir Variables autonomicas
+        elif algorithm == 'ICP Model':
+            results['ICP Model'] = icp_model() #Pendiente ver como añadir el modelo de ICP
+        
+        #Pendiente añadir ABP model
+        #Pendiente añadir otros algoritmos.
     return results
 
 #ROX INDEX
