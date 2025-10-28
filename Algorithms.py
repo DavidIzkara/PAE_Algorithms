@@ -3,7 +3,7 @@ from vitaldb import VitalFile
 
 from shock_index import ShockIndex
 from driving_pressure import DrivingPressure
-from compliance import Compliance
+from dynamic_compliance import DynamicCompliance
 from rox_index import RoxIndex
 from temp_comparison import TempComparison
 #Pendiente importar ICP Model
@@ -21,17 +21,27 @@ selected_list = []
 def check_availability(tracks): #Función que comprueba qué algoritmos se pueden calcular con las variables disponibles.
     possible_list = []
 
-    if 'Intellivue/ECG_HR' and ('Intellivue/ABP_SYS' or 'Intellivue/NIBP_SYS') in tracks:
+    if 'Intellivue/ECG_HR' and ('Intellivue/ABP_SYS' or 'Intellivue/NIBP_SYS') in tracks: #Pendiente añadir comprobaciones HR
         possible_list.append('Shock Index')
     if 'Intellivue/PPLAT_CMH2O' and 'Intellivue/PEEP_CMH2O' in tracks:
         possible_list.append('Driving Pressure')
-    if 'Intellivue/Tidal_Volume' in tracks and 'Driving Pressure' in possible_list:
-        possible_list.append('Compliance')
+    if 'Intellivue/TV_EXP' and 'Intellivue/PIP_CMH2O' and 'Intellivue/PEEP_CMH2O' in tracks:
+        possible_list.append('Dynamic Compliance')
     if 'Intellivue/PLETH_SAT_O2' and 'Intellivue/FiO2' in tracks:
         possible_list.append('ROX Index')
     if ('Intellivue/BT_CORE' or 'Intellivue/BT_BLD') and ('Intellivue/BT_SKIN' or 'Intellivue/TEMP') in tracks:
         possible_list.append('Temp Comparison')
-    #Pendiente Comprobar Variables MostCare
+    #Variables MostCare
+    if 'Intellivue/VOL_BLD_STROKE' and 'Intellivue/ECG_HR' in tracks: #Pendiente añadir comprobaciones HR
+        possible_list.append('Cardiac Output')
+    if 'Intellivue/ABP_MEAN' and 'Intellivue/CVP_MEAN' in tracks and 'Cardiac Output' in possible_list: #Pendiente añadir comprobaciones ABP MEAN
+        possible_list.append('Systemic Vascular Resistance')
+    if 'Intellivue/ABP_MEAN' in tracks and 'Cardiac Output' in possible_list: #Pendiente añadir comprobaciones ABP MEAN
+        possible_list.append('Cardiac Power Output')
+    if 'Intellivue/ABP_SYS' and 'Intellivue/VOL_BLD_STROKE' in tracks: #Pendiente añadir comprobaciones ABP SYS
+        possible_list.append('Effective Arterial Elastance')
+    #Ver si se pueden añadir más variables MostCare
+
     #Pendiente Comprobar Variables autonomicas
 
     if 'Intellivue/ICP' in tracks: #Might need more variables
@@ -50,8 +60,8 @@ def run_selected(selected_list): #Función que ejecuta los algoritmos selecciona
             results['Shock Index'] = ShockIndex(vf).values
         elif algorithm == 'Driving Pressure':
             results['Driving Pressure'] = DrivingPressure(vf).values
-        elif algorithm == 'Compliance':
-            results['Compliance'] = Compliance(vf).values
+        elif algorithm == 'Dynamic Compliance':
+            results['Dynamic Compliance'] = DynamicCompliance(vf).values
         elif algorithm == 'ROX Index':
             results['ROX Index'] = RoxIndex(vf).values
         elif algorithm == 'Temp Comparison':
@@ -64,10 +74,8 @@ def run_selected(selected_list): #Función que ejecuta los algoritmos selecciona
             results['ICP Model'] = icp_model() #Pendiente ver como añadir el modelo de ICP
         
         #Pendiente añadir ABP model
+        
         #Pendiente añadir otros algoritmos.
     return results
 
-#ROX INDEX
-def rox_index():
-    return vf.to_numpy(track_names = 'Intellivue/PLETH_SAT_O2') / vf.to_numpy(track_names = 'Intellivue/FiO2')
 
