@@ -9,7 +9,7 @@ from temp_comparison import TempComparison
 from cardiac_output import CardiacOutput
 from systemic_vascular_resistance import SystemicVascularResistance
 from cardiac_power_output import CardiacPowerOutput
-#from effective_arterial_elastance import EffectiveArterialElastance
+from effective_arterial_elastance import EffectiveArterialElastance
 
 #Pendiente importar ICP Model
 #Pendiente importar ABP Model
@@ -72,8 +72,18 @@ def run_selected(selected_list): #Función que ejecuta los algoritmos selecciona
         elif algorithm == 'ROX Index':
             results['ROX Index'] = RoxIndex(vf).values
         elif algorithm == 'Temp Comparison':
-            results['Temp Comparison'] = TempComparison(vf).values 
-            #Gestionar distinto, devuelve un array con dos señales.
+            results['Temp Comparison'] = TempComparison(vf).values
+              #Gestionar distinto, devuelve un array con dos señales.
+        elif algorithm == 'Cardiac Output':
+            results['Cardiac Output'] = CardiacOutput(vf).values
+        elif algorithm == 'Systemic Vascular Resistance':
+            results['Systemic Vascular Resistance'] = SystemicVascularResistance(vf).values
+        elif algorithm == 'Cardiac Power Output':
+            results['Cardiac Power Output'] = CardiacPowerOutput(vf).values
+        elif algorithm == 'Effective Arterial Elastance':
+            results['Effective Arterial Elastance'] = EffectiveArterialElastance(vf).values
+        
+          
         
         #Pendiente añadir variables MostCare
         #Pendiente añadir Variables autonomicas
