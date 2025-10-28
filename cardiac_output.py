@@ -11,7 +11,7 @@ class CardiacOutput:
             next((t for t in available_tracks if 'Intellivue/ABP_HR' in t),     # Then try for ABP_HR
                  next((t for t in available_tracks if 'Intellivue/HR' in t), None))) # Finally try for generic HR track
         
-        self.vf = vf.to_numpy(track_names = 'Intellivue/VOL_BLD_STROKE') * vf.to_numpy(track_names=hr_track)
+        self.values = vf.to_numpy(track_names = 'Intellivue/VOL_BLD_STROKE') * vf.to_numpy(track_names=hr_track)
 
 #Calculates Cardiac Output by multiplying Stroke Volume by Heart Rate.
 #Handles multiple possible heart rate track names for robustness.
