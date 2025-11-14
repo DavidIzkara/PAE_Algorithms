@@ -1,7 +1,5 @@
 import vitaldb
 import math
-import pandas
-
 
 class ShockIndex:
 
@@ -40,7 +38,6 @@ class ShockIndex:
         #Creates the SI dataframe: Timestamp | SI_value
         self.values = {'Timestamp': pre_si["Time"], 'SI': pre_si[hr_track] / pre_si[sys_track]} 
 
-        
 #Handles both invasive and non-invasive blood pressure by checking available tracks.
 #Requires heart rate track, tries multiple possible names for robustness.
 #Does not require any special handling of missing data as this class is only used when we have the data.
