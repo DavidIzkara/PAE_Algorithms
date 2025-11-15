@@ -1,13 +1,6 @@
 import vitaldb
-import math
 
-class DrivingPressure:
-
-    def is_nan(x):
-        try:
-            return math.isnan(x)
-        except Exception:
-            return False  
+class DrivingPressure: 
         
     def __init__(self, vf: vitaldb.VitalFile):
 
