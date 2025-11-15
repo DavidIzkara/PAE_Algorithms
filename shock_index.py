@@ -1,13 +1,6 @@
 import vitaldb
-import math
 
-class ShockIndex:
-
-    def is_nan(x):
-        try:
-            return math.isnan(x)
-        except Exception:
-            return False  
+class ShockIndex: 
 
     def __init__(self, vf: vitaldb.VitalFile):
         # Get all available track names in the VitalFile
