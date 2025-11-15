@@ -13,9 +13,18 @@ class TempComparison:
             (t for t in available_tracks if 'Intellivue/BT_SKIN' in t), # First try for BT_SKIN
             next((t for t in available_tracks if 'Intellivue/TEMP' in t), None)) # Then try for generic TEMP track
         
-        # Convert the signals to NumPy arrays
-        core = vf.to_numpy(track_names=core_track)
-        skin = vf.to_numpy(track_names=skin_track)
 
-        # Store the results
-        self.values = [core, skin]
+        # Converts the signals to pandas dataframes
+        core = vf.to_pandas(track_names=core_track, interval=0, return_timestamp=True)
+        skin = vf.to_pandas(track_names=skin_track, interval=0, return_timestamp=True)
+
+        
+        # Deletes the nan values
+        core_clean = core[core[core_track].notna()]
+        skin_clean = skin[skin[skin_track].notna()]
+        
+        # Creates a new dataframe with timestamp | hr_value | sys_value where both values come from the same timestamp
+        pre_temp= core_clean.merge(skin_clean, on="Time")
+
+        #Creates the SI dataframe: Timestamp | SI_value
+        self.values = {'Timestamp': pre_temp["Time"], 'CORE': pre_temp[core_track] , 'SKIN': pre_temp[skin_track]} 
