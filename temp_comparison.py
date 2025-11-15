@@ -23,8 +23,8 @@ class TempComparison:
         core_clean = core[core[core_track].notna()]
         skin_clean = skin[skin[skin_track].notna()]
         
-        # Creates a new dataframe with timestamp | hr_value | sys_value where both values come from the same timestamp
+        # Creates a new dataframe with timestamp | core_value | skin_value where both values come from the same timestamp
         pre_temp= core_clean.merge(skin_clean, on="Time")
 
-        #Creates the SI dataframe: Timestamp | SI_value
+        #Creates the SI dataframe: Timestamp | core_value | skin_value
         self.values = {'Timestamp': pre_temp["Time"], 'CORE': pre_temp[core_track] , 'SKIN': pre_temp[skin_track]} 
