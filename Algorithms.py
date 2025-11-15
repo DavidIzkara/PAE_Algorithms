@@ -1,18 +1,19 @@
 import vitaldb 
 from vitaldb import VitalFile
 
-from shock_index import ShockIndex
-from driving_pressure import DrivingPressure
-from dynamic_compliance import DynamicCompliance
-from rox_index import RoxIndex
-from temp_comparison import TempComparison
-from cardiac_output import CardiacOutput
-from systemic_vascular_resistance import SystemicVascularResistance
-from cardiac_power_output import CardiacPowerOutput
-from effective_arterial_elastance import EffectiveArterialElastance
+from Algoritmos_VF.shock_index import ShockIndex
+from Algoritmos_VF.driving_pressure import DrivingPressure
+from Algoritmos_VF.dynamic_compliance import DynamicCompliance
+from Algoritmos_VF.rox_index import RoxIndex
+from Algoritmos_VF.temp_comparison import TempComparison
+from Algoritmos_VF.cardiac_output import CardiacOutput
+from Algoritmos_VF.systemic_vascular_resistance import SystemicVascularResistance
+from Algoritmos_VF.cardiac_power_output import CardiacPowerOutput
+from Algoritmos_VF.effective_arterial_elastance import EffectiveArterialElastance
 
 #Pendiente importar ICP Model
 #Pendiente importar ABP Model
+
 #Pendiente importar otros algoritmos
 
 
@@ -28,24 +29,24 @@ selected_list = []
 def check_availability(tracks): #Función que comprueba qué algoritmos se pueden calcular con las variables disponibles.
     possible_list = []
 
-    if ('Intellivue/ECG_HR' or 'Intellivue/ABP_HR' or 'Intellivue/HR') and ('Intellivue/ABP_SYS' or 'Intellivue/BP_SYS' or 'Intellivue/NIBP_SYS') in tracks:
+    if ('Intellivue/ECG_HR' in tracks or 'Intellivue/ABP_HR' in tracks or 'Intellivue/HR' in tracks) and ('Intellivue/ABP_SYS' in tracks or 'Intellivue/BP_SYS' in tracks or 'Intellivue/NIBP_SYS' in tracks):
         possible_list.append('Shock Index')
-    if 'Intellivue/PPLAT_CMH2O' and 'Intellivue/PEEP_CMH2O' in tracks:
+    if 'Intellivue/PPLAT_CMH2O' in tracks and 'Intellivue/PEEP_CMH2O' in tracks:
         possible_list.append('Driving Pressure')
-    if 'Intellivue/TV_EXP' and 'Intellivue/PIP_CMH2O' and 'Intellivue/PEEP_CMH2O' in tracks:
+    if 'Intellivue/TV_EXP' in tracks and 'Intellivue/PIP_CMH2O' in tracks and 'Intellivue/PEEP_CMH2O' in tracks:
         possible_list.append('Dynamic Compliance')
-    if 'Intellivue/PLETH_SAT_O2' and 'Intellivue/FiO2' in tracks:
+    if 'Intellivue/PLETH_SAT_O2' in tracks and 'Intellivue/FiO2' in tracks:
         possible_list.append('ROX Index')
-    if ('Intellivue/BT_CORE' or 'Intellivue/BT_BLD') and ('Intellivue/BT_SKIN' or 'Intellivue/TEMP') in tracks:
+    if ('Intellivue/BT_CORE' in tracks or 'Intellivue/BT_BLD' in tracks) and ('Intellivue/BT_SKIN' in tracks or 'Intellivue/TEMP' in tracks):
         possible_list.append('Temp Comparison')
     #Variables MostCare
-    if 'Intellivue/VOL_BLD_STROKE' and ('Intellivue/ECG_HR' or 'Intellivue/ABP_HR' or 'Intellivue/HR') in tracks:
+    if 'Intellivue/VOL_BLD_STROKE' in tracks and ('Intellivue/ECG_HR' in tracks or 'Intellivue/ABP_HR' in tracks or 'Intellivue/HR' in tracks):
         possible_list.append('Cardiac Output')
-    if ('Intellivue/ABP_MEAN' or 'Intellivue/BP_MEAN' or 'Intellivue/NIBP_MEAN') and 'Intellivue/CVP_MEAN' in tracks and 'Cardiac Output' in possible_list:
+    if ('Intellivue/ABP_MEAN' in tracks or 'Intellivue/BP_MEAN' in tracks or 'Intellivue/NIBP_MEAN' in tracks) and 'Intellivue/CVP_MEAN' in tracks and 'Cardiac Output' in possible_list:
         possible_list.append('Systemic Vascular Resistance')
-    if ('Intellivue/ABP_MEAN' or 'Intellivue/BP_MEAN' or 'Intellivue/NIBP_MEAN') in tracks and 'Cardiac Output' in possible_list:
+    if ('Intellivue/ABP_MEAN' in tracks or 'Intellivue/BP_MEAN' in tracks or 'Intellivue/NIBP_MEAN' in tracks) and 'Cardiac Output' in possible_list:
         possible_list.append('Cardiac Power Output')
-    if ('Intellivue/ABP_SYS' or 'Intellivue/BP_SYS' or 'Intellivue/NIBP_SYS') and 'Intellivue/VOL_BLD_STROKE' in tracks:
+    if ('Intellivue/ABP_SYS' in tracks or 'Intellivue/BP_SYS' in tracks or 'Intellivue/NIBP_SYS' in tracks) and 'Intellivue/VOL_BLD_STROKE' in tracks:
         possible_list.append('Effective Arterial Elastance')
     #Ver si se pueden añadir más variables MostCare
 
@@ -53,7 +54,9 @@ def check_availability(tracks): #Función que comprueba qué algoritmos se puede
 
     if 'Intellivue/ICP' in tracks: #Might need more variables
         possible_list.append('ICP Model')
-    #Pendiente comprobar ABP model
+    if 'Intellivue/PLETH' in tracks and 'Intellivue/ART' in tracks and 'Intellivue/ABP' in tracks:
+        possible_list.append('ABP Model')
+    
     #Pendiente Comprobar otros algoritmos
 
     return possible_list #Esta lista se envía al front para que el usuario seleccione.
@@ -83,14 +86,11 @@ def run_selected(selected_list): #Función que ejecuta los algoritmos selecciona
         elif algorithm == 'Effective Arterial Elastance':
             results['Effective Arterial Elastance'] = EffectiveArterialElastance(vf).values
         
-          
-        
-        #Pendiente añadir variables MostCare
         #Pendiente añadir Variables autonomicas
         elif algorithm == 'ICP Model':
             results['ICP Model'] = icp_model() #Pendiente ver como añadir el modelo de ICP
-        
-        #Pendiente añadir ABP model
+        elif algorithm == 'ABP Model':
+            results['ABP Model'] = abp_model() #Pendiente ver como añadir el modelo de ABP
 
         #Pendiente añadir otros algoritmos.
     return results
