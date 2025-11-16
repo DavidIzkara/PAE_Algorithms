@@ -24,8 +24,8 @@ class SystemicVascularResistance:
         cvp_clean = cvp[cvp[cvp_track].notna()]
         
         co = CardiacOutput(vf).values
-        # Creates a new dataframe with timestamp | bld_value | bld_value where both values come from the same timestamp
-        pre_svr= mean_clean.merge(cvp_clean, on="Time").merge(co, on = 'Timestamp')
+        # Creates a new dataframe with timestamp | mean_value | cvp_value | co_value where both values come from the same timestamp
+        pre_svr= mean_clean.merge(cvp_clean, on="Time").merge(co, left_on="Time", right_on = 'Timestamp')
 
         #Creates the SVR dataframe: Timestamp | SVR_value
         self.values = {'Timestamp': pre_svr["Time"], 'SVR': ((pre_svr[mean_track] - pre_svr[cvp_track])*80)/pre_svr['CO']} 
