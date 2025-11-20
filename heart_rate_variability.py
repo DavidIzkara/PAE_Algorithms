@@ -1,15 +1,23 @@
 import vitaldb
 import numpy as np
-from funcion_RR import funcion_rr
+from compute_rr import compute_rr
 
 
 class HeartRateVariability:
 
     def __init__(self, vf: vitaldb.VitalFile):
+        # Get all available track names in the VitalFile
+        available_tracks = vf.get_track_names()
+
+        # Try to find heart rate wave
+        hr_track = next(
+            (t for t in available_tracks if 'Intellivue/ECG_I' in t), 
+            next((t for t in available_tracks if 'Intellivue/ECG_II' in t),     
+                 next((t for t in available_tracks if 'Intellivue/ECG_III' in t), None))) 
+
         # Convert the signals to NumPy arrays
-        hr = vf.to_pandas(track_names="Intellivue/ECG_II", interval=0)
-        rr = funcion_rr(vf)
-        print("Valores rr?:", rr)
+        hr = vf.to_pandas(track_names=hr_track, interval=1/500)
+        rr = compute_rr(hr)
 
         # Calculate HRV metrics
         sdnn = self.compute_sdnn(rr)
